@@ -1,5 +1,3 @@
-# java-core
-
 ### Java Futures: 
 - Simple -> Easy to learn and understand
 - Portable -> Plattform independen. Java compiled it will convert into platform independent bytecode. The bytecode is interpreted by JVM.
@@ -506,43 +504,182 @@ Interviewfrage:
 Mithilfe von Methoden kann man die Wiederverwendbarkeit erreichen.
 
 
+## Variables in Java
+
+#### Local Variables 
+- Lokale Variablen werden innerhalb einer Methode, eines Konstruktors oder von Blöcken definiert. 
+- Der Gültigkeitsbereich dieser Variable ist auf die Methode, den Konstruktor oder den Block beschränkt. 
+- Es können keine Zugriffsmodifikatoren für lokale Variablen verwendet werden.
+- Dies sind temporäre Variablen, die während der Ausführung der Methode existieren. 
+- Sie sind nicht aus dem Rest der Klasse heraus zugänglich.
+#### Instance Variables
+- Instanzvariablen werden innerhalb einer Klasse, aber außerhalb von Methoden, definiert. 
+- Jede Instanz (Objekt) einer Klasse enthält ihre eigene Kopie dieser Variablen. 
+- Wenn ein Objekt mit dem Schlüsselwort `new` erstellt wird, werden Instanzvariablen erstellt, und wenn das Objekt zerstört wird, wird auch die Instanzvariable zerstört.
+- Instanzvariablen können Zugriffsmodifikatoren haben. 
+- Instanzvariablen sind für alle Methoden, Konstruktoren und Blöcke in der Klasse sichtbar. 
+- Instanzvariablen können innerhalb der Klasse direkt aufgerufen werden, indem der Variablennamen verwendet wird. 
+- Instanzvariablen sind nicht-statische Variablen. 
+- Sie werden auch als Zustandsvariablen (State Variables) bezeichnet.
+#### Static Variables (Statische Variablen)
+- Das statische Schlüsselwort wird hauptsächlich für die Speicherverwaltung verwendet. 
+- Das statische Schlüsselwort ist mit der Klasse selbst und nicht mit einer Instanz der Klasse verbunden. 
+- Durch die Verwendung von statischen Variablen machen wir unser Programm speichereffizient. 
+- Um auf eine statische Variable oder Methode zuzugreifen, verwenden wir den Klassennamen und nicht eine Instanz der Klasse.
+- Das statische Schlüsselwort kann mit
+   - Variablen 
+   - Methoden 
+   - Imports 
+   - Blöcken 
+   - Klassen 
+     verwendet werden.
+- Statische Methoden können nicht direkt auf nicht-statische Variablen oder Methoden zugreifen. 
+- Die Schlüsselwörter `this` und `super` können nicht im statischen Kontext verwendet werden
+- Only one copy on the variables at runtime
+
+##### Vorteile des statischen Schlüsselworts: 
+- Globale Zugänglichkeit: Das bedeutet, dass es nicht von einer Instanz der Klasse abhängig ist.
+- Daher kann es über den Klassennamen aufgerufen werden (kein Objekt ist erforderlich). 
+- Nur eine Instanz pro JVM. 
+- Statische Mitglieder beeinflussen nicht den Zustand des Objekts. 
+- Sie werden beim Start der JVM geladen und beim Herunterfahren der JVM zerstört.
+
+##### Nachteile des statischen Schlüsselworts: 
+- Diese sind immer Teil des Klassenspeichers, unabhängig davon, ob sie verwendet werden oder nicht. 
+- Erzeugen und Löschen von statischen Variablen können nicht kontrolliert werden. 
+- Statische Methoden können nicht überschrieben werden. 
+- Wenn ein Thread den statischen Wert ändert, kann dies die Funktionalität anderer Threads beeinträchtigen.
+##### Das ist kein speichereffizient!!!
+```java
+public class Employee { // Das ist kein speichereffizient!!!
+    int empId;
+    String name;
+    String company;
+
+	public void printInformation(int empId, String name, String company){
+		System.out.println("empId:" + empId + " - " + " name:" + name + " - " + "company: " + company);
+	}
+
+    public static void main(String[] args) {
+        Employee employeeData = new Employee();
+        employeeData.printInformation(101, "Karim", "Oracle");
+        employeeData.printInformation(202, "Alex", "Oracle")
+    }
+}
+```
+##### Das ist  speichereffizient :)
+```java
+public class Employee { // Das ist kein speichereffizient!!!
+    int empId;
+    String name;
+    static String company = "Oracle";
+
+	public void printInformation(int empId, String name){
+		System.out.println("empId:" + empId + " - " + " name:" + name + " - company: " + Employee.company);
+	}
+
+    public static void main(String[] args) {
+        Employee employeeData = new Employee();
+        employeeData.printInformation(101, "Karim");
+		employeeData.printInformation(202, "Alex");
+		System.out.print("Company: "+ Employee.company);
+    }
+}
+```
+
+## Static schlüsselwort
+
+#### Static Methods / Statische Methoden
+Statische Methoden sind Methoden, die auf Klassenebene existieren und nicht an eine Instanz der Klasse gebunden sind. Sie können direkt über den Klassennamen aufgerufen werden, ohne eine Instanz der Klasse erstellen zu müssen.
+- Du kannst nur auf statische Variablen in statischen Methoden zugreifen. Wenn du versuchst, auf eine nicht-statische Variable zuzugreifen, wird der Compiler einen Fehler melden.
+- Statische Methoden können über ihre Klassenreferenz aufgerufen werden, und es ist nicht erforderlich, eine Instanz der Klasse zu erstellen. 
+- Statische Methoden gehören ebenfalls zum Klassenniveau des Gültigkeitsbereichs.
+```java
+public class StaticMethodExample {
+
+	static int staticNum = 20; // In einer statischen Methode nicht aufrufbar!!!
+    // Statische Methode, die zwei Zahlen addiert
+    public static int addiere(int a, int b) {
+        return a + b;
+    }
+
+    public static void main(String[] args) {
+        int summeClassMethod = StaticMethodExample.addiere(5, 3); // Aufruf der statischen Methode
+        int summeMethod = addiere(5, 3); // Aufruf der statischen Methode
+        System.out.println("Die Summe ist: " + summeClassMethod);
+        System.out.println("Die Summe ist: " + summeMethod);
+    }
+}
+```
+
+#### Static import / Statische Importe
+Statische Importe ermöglichen es, statische Mitglieder (Variablen und Methoden) einer Klasse direkt zu verwenden, ohne den Klassennamen zu qualifizieren.
+- Mit static import:
+```java
+import static java.lang.Math.*;
+import static java.lang.Sytem.*;
+
+public class StaticImportExample {
+
+    public static void main(String[] args) {
+        double wurzel = sqrt(25); // Direkter Zugriff auf die statische Methode sqrt
+        out.println("Wurzel von 25 ist: " + wurzel);
+    }
+}
+```
+- Ohne static import
+```java
+public class StaticImportExample {
+
+    public static void main(String[] args) {
+        double wurzel = Math.sqrt(25); // Indirekter Zugriff auf die statische Methode sqrt
+        System.out.println("Wurzel von 25 ist: " + wurzel);
+    }
+}
+```
+#### Static block / Statische Blöcke:
+Statische Blöcke sind Codeblöcke innerhalb einer Klasse, die mit dem Schlüsselwort `static` markiert sind. Sie werden beim Laden der Klasse ausgeführt, noch bevor eine Instanz erstellt wird oder statische Methoden aufgerufen werden. Statische Blöcke werden oft verwendet, um Initialisierungscode auszuführen. Blöcke werden ausgeführt, wenn die Klasse im Speicher geladen wird.
+```java
+public class StaticBlockExample {
+
+    static {
+        System.out.println("Dieser statische Block wird beim Laden der Klasse ausgeführt.");
+    }
+
+    public static void main(String[] args) {
+        System.out.println("Hauptmethode aufgerufen.");
+    }
+}
+
+```
+**Verwendung von statischen Blöcken:** 
+Statische Blöcke werden häufig verwendet, um Initialisierungscode auszuführen, der einmalig beim Laden der Klasse benötigt wird. Dies kann das Konfigurieren von statischen Variablen, das Öffnen von Ressourcen oder das Durchführen von anderen Aufgaben sein, die beim Start der Klasse durchgeführt werden müssen.
+
+#### Static Class / Statische Klassen (innere statische Klassen)
+Statische Klassen sind innere Klassen, die mit dem Schlüsselwort `static` deklariert werden. Sie sind unabhängig von Instanzen der äußeren Klasse und können instanziiert werden, ohne eine Instanz der äußeren Klasse zu erstellen. Sie werden oft verwendet, um Klassen zu gruppieren, die eng miteinander verbunden sind, aber keine spezifische Instanzbeziehung benötigen.
+```java
+public class OuterClass {
+
+    // Innere statische Klasse
+    static class InnerStaticClass {
+	    static int num1 = 1; // statische Variable direkt zugänglich
+	    int num2 = 2; // zugänglich durch die Erstellung einer Instanz
+	    
+        void anzeigen() {
+            System.out.println("Dies ist die innere statische Klasse.");
+        }
+    }
+
+    public static void main(String[] args) {
+        InnerStaticClass inner = new InnerStaticClass();
+        inner.anzeigen(); // Aufruf der Methode in der inneren statischen Klasse
+    }
+}
+```
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+Was bedeute das Schlüsselwort "static"?
+Das Schlüsselwort "static" in Java hat mehrere Bedeutungen und Anwendungen, die das Verhalten von Klassen, Variablen und Methoden beeinflussen können. Im Allgemeinen kennzeichnet das "static" Schlüsselwort Elemente, die auf Klassenebene existieren und nicht an eine bestimmte Instanz der Klasse gebunden sind
 
 
 
